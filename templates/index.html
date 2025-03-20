@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Appointment System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c7be5;
+            --secondary-color: #6e84a3;
+            --success-color: #00d97e;
+            --danger-color: #e63757;
+            --warning-color: #f6c343;
+            --info-color: #39afd1;
+            --light-color: #f9fbfd;
+            --dark-color: #12263f;
+            --border-color: #edf2f9;
+            --card-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fbfd;
+            color: #12263f;
+        }
+        
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 0.125rem 0.25rem rgba(18, 38, 63, 0.075);
+            padding: 0.75rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--primary-color) !important;
+            font-size: 1.25rem;
+        }
+        
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: var(--secondary-color);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: var(--primary-color);
+        }
+        
+        .card {
+            margin-bottom: 24px;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 1rem 2rem rgba(18, 38, 63, 0.05);
+        }
+        
+        /* Section-specific border colors */
+        .card.email-section {
+            border-left-color: var(--info-color);
+        }
+        
+        .card.appointment-section {
+            border-left-color: var(--primary-color);
+        }
+        
+        .card.patient-section {
+            border-left-color: var(--success-color);
+        }
+        
+        .card.clinician-section {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .card.waitlist-section {
+            border-left-color: var(--warning-color);
+        }
+        
+        /* Stats cards border colors */
+        .card .stats-card.patients-stats {
+            border-left-color: var(--success-color);
+        }
+        
+        .card .stats-card.clinicians-stats {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .card .stats-card.appointments-stats {
+            border-left-color: var(--primary-color);
+        }
+        
+        .card .stats-card.waitlist-stats {
+            border-left-color: var(--warning-color);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-header h5 {
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        
+        .card-header .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-top: none;
+            padding: 0.75rem 1rem;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-color: var(--border-color);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(44, 123, 229, 0.05);
+        }
+        
+        .btn {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a68d1;
+            border-color: #1a68d1;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+        
+        .badge {
+            padding: 0.4em 0.65em;
+            font-weight: 500;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+        
+        .bg-success {
+            background-color: var(--success-color) !important;
+        }
+        
+        .bg-danger {
+            background-color: var(--danger-color) !important;
+        }
+        
+        .bg-warning {
+            background-color: var(--warning-color) !important;
+        }
+        
+        .bg-info {
+            background-color: var(--info-color) !important;
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary-color) !important;
+        }
+        
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        }
+        
+        .alert {
+            box-shadow: 0 0.5rem 1rem rgba(18, 38, 63, 0.1);
+            border: none;
+            border-radius: 0.375rem;
+        }
+        
+        .email-content {
+            font-family: 'Poppins', sans-serif;
+            white-space: pre-wrap;
+            background-color: #f9fbfd;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 0;
+            font-size: 0.875rem;
+            overflow-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            display: block;
+            width: 100%;
+        }
+        
+        .form-control, .form-select {
+            padding: 0.5rem 1rem;
+            border-color: var(--border-color);
+            border-radius: 0.375rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 123, 229, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-content {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 1.5rem 3rem rgba(18, 38, 63, 0.15);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .modal-header .modal-title {
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        /* Dashboard stats cards */
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .stats-card h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-card p {
+            color: var(--secondary-color);
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        
+        .stats-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+        }
+        
+        /* AI Assistant alert */
+        .ai-assistant-alert {
+            background-color: rgba(57, 175, 209, 0.1);
+            border-left: 4px solid var(--info-color);
+            border-radius: 0.375rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-assistant-alert h5 {
+            color: var(--info-color);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .ai-assistant-alert h5 i {
+            margin-right: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .ai-assistant-alert ul {
+            margin-bottom: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .ai-assistant-alert li {
+            color: var(--secondary-color);
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-hospital me-2"></i>
+                Medical Appointment System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-people me-1"></i> Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-person-badge me-1"></i> Clinicians</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="themeToggle" class="btn btn-sm btn-outline-primary ms-2">
+                            <i class="bi bi-nintendo-switch me-1"></i> Mario Theme
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+        <!-- AI Assistant Information -->
+        <div class="ai-assistant-alert">
+            <h5><i class="bi bi-robot"></i> AI Assistant Enabled</h5>
+            <ul class="mb-0">
+                <li>AI generates draft responses for patient emails when you click "View & Respond"</li>
+                <li>AI prepares cancellation emails when you click "Cancel" on appointments</li>
+            </ul>
+        </div>
+        
+        <!-- Email Inbox Section -->
+        <div class="card email-section mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-envelope me-2"></i>Email Inbox</h5>
+                <span class="badge bg-primary">{{ emails|length }} unread</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sender</th>
+                                <th>Subject</th>
+                                <th>Received</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for email in emails %}
+                            <tr class="{% if not email.read %}fw-bold{% endif %}" id="email-row-{{ email.id }}">
+                                <td>{{ email.sender }}</td>
+                                <td>{{ email.subject }}</td>
+                                <td>{{ email.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <span class="badge {% if email.read %}bg-secondary{% else %}bg-primary{% endif %}">
+                                        {{ 'Read' if email.read else 'Unread' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary view-email" data-email-id="{{ email.id }}">
+                                        View & Respond
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr id="email-response-{{ email.id }}" class="d-none">
+                                <td colspan="5">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6>From: <span class="email-sender"></span> (<span class="email-address"></span>)</h6>
+                                            <h6>Subject: <span class="email-subject"></span></h6>
+                                            <pre class="email-content mb-3"></pre>
+                                            <div class="mb-3">
+                                                <label class="form-label">Your Response:</label>
+                                                <textarea class="form-control response-content" rows="5"></textarea>
+                                            </div>
+                                            <div class="text-end">
+                                                <button class="btn btn-secondary btn-sm cancel-response">Cancel</button>
+                                                <button class="btn btn-success btn-sm send-response" data-email-id="{{ email.id }}">Send Response</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body stats-card patients-stats">
+                        <div class="stats-icon"><i class="bi bi-people"></i></div>
+                        <h2>{{ patients|length }}</h2>
+                        <p>Patients</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body stats-card clinicians-stats">
+                        <div class="stats-icon"><i class="bi bi-person-badge"></i></div>
+                        <h2>{{ clinicians|length }}</h2>
+                        <p>Clinicians</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body stats-card appointments-stats">
+                        <div class="stats-icon"><i class="bi bi-calendar-check"></i></div>
+                        <h2>{{ appointments|length }}</h2>
+                        <p>Appointments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body stats-card waitlist-stats">
+                        <div class="stats-icon"><i class="bi bi-hourglass-split"></i></div>
+                        <h2>{{ waitlist|length }}</h2>
+                        <p>Waitlist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div class="card appointment-section mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Appointments</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleAppointmentModal">
+                    <i class="bi bi-plus-circle me-1"></i> Schedule Appointment
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Clinician</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id, appointment in appointments.items() %}
+                            <tr id="appointment-row-{{ appointment.id }}">
+                                <td>{{ appointment.id }}</td>
+                                <td>{{ patients[appointment.patient_id].name }}</td>
+                                <td>{{ clinicians[appointment.clinician_id].name }}</td>
+                                <td>{{ appointment.date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ appointment.start_time.strftime('%H:%M') }} - {{ appointment.end_time.strftime('%H:%M') }}</td>
+                                <td>
+                                    <span class="badge {% if appointment.status == 'Scheduled' %}bg-primary{% elif appointment.status == 'Completed' %}bg-success{% elif appointment.status == 'Cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                                        {{ appointment.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if appointment.status != 'Cancelled' %}
+                                    <button type="button" class="btn btn-sm btn-danger cancel-appointment-btn" data-appointment-id="{{ appointment.id }}">Cancel</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr id="cancellation-row-{{ appointment.id }}" class="d-none">
+                                <td colspan="7">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6>Review Cancellation Email</h6>
+                                            <p><strong>To:</strong> <span class="patient-email"></span></p>
+                                            <p><strong>Subject:</strong> Appointment Cancellation</p>
+                                            <div class="mb-3">
+                                                <label class="form-label">Email Content:</label>
+                                                <textarea class="form-control email-content" rows="8" readonly></textarea>
+                                            </div>
+                                            <div class="text-end">
+                                                <button class="btn btn-secondary btn-sm cancel-cancellation">Back</button>
+                                                <button class="btn btn-danger btn-sm reject-email" data-appointment-id="{{ appointment.id }}">Reject Email</button>
+                                                <button class="btn btn-success btn-sm approve-email" data-appointment-id="{{ appointment.id }}">Approve & Send</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Section -->
+        <div class="card patient-section mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-people me-2"></i>Patients</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                    <i class="bi bi-plus-circle me-1"></i> Add Patient
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Birthday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id, patient in patients.items() %}
+                            <tr>
+                                <td>{{ patient.id }}</td>
+                                <td>{{ patient.name }}</td>
+                                <td>{{ patient.email }}</td>
+                                <td>{{ patient.phone }}</td>
+                                <td>{{ patient.birthday.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinicians Section -->
+        <div class="card clinician-section mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Clinicians</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClinicianModal">
+                    <i class="bi bi-plus-circle me-1"></i> Add Clinician
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Specialization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id, clinician in clinicians.items() %}
+                            <tr>
+                                <td>{{ clinician.id }}</td>
+                                <td>{{ clinician.name }}</td>
+                                <td>{{ clinician.specialization }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waitlist Section -->
+        <div class="card waitlist-section mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Waitlist</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addToWaitlistModal">
+                    <i class="bi bi-plus-circle me-1"></i> Add to Waitlist
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Requested Date</th>
+                                <th>Priority</th>
+                                <th>Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in waitlist %}
+                            <tr>
+                                <td>{{ patients[entry.patient_id].name }}</td>
+                                <td>{{ entry.requested_date.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <span class="badge {% if entry.priority.name == 'URGENT' %}bg-danger{% elif entry.priority.name == 'HIGH' %}bg-warning{% elif entry.priority.name == 'MEDIUM' %}bg-info{% else %}bg-success{% endif %}">
+                                        {{ entry.priority.name }}
+                                    </span>
+                                </td>
+                                <td>{{ entry.date_added.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('add_patient') }}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthday" class="form-label">Birthday</label>
+                            <input type="date" class="form-control" id="birthday" name="birthday" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Patient</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Clinician Modal -->
+    <div class="modal fade" id="addClinicianModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Clinician</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('add_clinician') }}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="clinician_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="clinician_name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specialization" class="form-label">Specialization</label>
+                            <input type="text" class="form-control" id="specialization" name="specialization" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Clinician</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Appointment Modal -->
+    <div class="modal fade" id="scheduleAppointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('schedule_appointment') }}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="patient_id" class="form-label">Patient</label>
+                            <select class="form-select" id="patient_id" name="patient_id" required>
+                                <option value="" selected disabled>Select a patient</option>
+                                {% for id, patient in patients.items() %}
+                                <option value="{{ id }}">{{ patient.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="clinician_id" class="form-label">Clinician</label>
+                            <select class="form-select" id="clinician_id" name="clinician_id" required>
+                                <option value="" selected disabled>Select a clinician</option>
+                                {% for id, clinician in clinicians.items() %}
+                                <option value="{{ id }}">{{ clinician.name }} ({{ clinician.specialization }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="start_time" class="form-label">Start Time</label>
+                            <input type="time" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_time" class="form-label">End Time</label>
+                            <input type="time" class="form-control" id="end_time" name="end_time" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Schedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Waitlist Modal -->
+    <div class="modal fade" id="addToWaitlistModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add to Waitlist</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ url_for('add_to_waitlist') }}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="waitlist_patient_id" class="form-label">Patient</label>
+                            <select class="form-select" id="waitlist_patient_id" name="patient_id" required>
+                                <option value="" selected disabled>Select a patient</option>
+                                {% for id, patient in patients.items() %}
+                                <option value="{{ id }}">{{ patient.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="requested_date" class="form-label">Requested Date</label>
+                            <input type="date" class="form-control" id="requested_date" name="requested_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="1">LOW</option>
+                                <option value="2">MEDIUM</option>
+                                <option value="3">HIGH</option>
+                                <option value="4">URGENT</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add to Waitlist</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+        
+        // Handle email viewing and response
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle email view buttons
+            document.querySelectorAll('.view-email').forEach(button => {
+                button.addEventListener('click', function() {
+                    const emailId = this.getAttribute('data-email-id');
+                    const responseRow = document.getElementById(`email-response-${emailId}`);
+                    
+                    // If the response row is already visible, just hide it
+                    if (!responseRow.classList.contains('d-none')) {
+                        responseRow.classList.add('d-none');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
+                    this.disabled = true;
+                    
+                    fetch(`/get_email_response/${emailId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Reset button state
+                        this.innerHTML = 'View & Respond';
+                        this.disabled = false;
+                        
+                        if (data.error) {
+                            alert('Error: ' + data.error);
+                            return;
+                        }
+                        
+                        // Populate the response row with the email content and response
+                        const senderElements = responseRow.querySelectorAll('.email-sender');
+                        const addressElements = responseRow.querySelectorAll('.email-address');
+                        const subjectElements = responseRow.querySelectorAll('.email-subject');
+                        const contentElements = responseRow.querySelectorAll('.email-content');
+                        const responseElements = responseRow.querySelectorAll('.response-content');
+                        
+                        senderElements.forEach(el => el.textContent = data.sender);
+                        addressElements.forEach(el => el.textContent = data.email);
+                        subjectElements.forEach(el => el.textContent = data.subject);
+                        contentElements.forEach(el => el.textContent = data.content);
+                        responseElements.forEach(el => el.value = data.response || '');
+                        
+                        // Show the response row
+                        responseRow.classList.remove('d-none');
+                    })
+                    .catch(error => {
+                        // Reset button state
+                        this.innerHTML = 'View & Respond';
+                        this.disabled = false;
+                        
+                        console.error('Error:', error);
+                        alert('An error occurred while processing your request.');
+                    });
+                });
+            });
+            
+            // Handle cancel response buttons
+            document.querySelectorAll('.cancel-response').forEach(button => {
+                button.addEventListener('click', function() {
+                    const responseRow = this.closest('tr');
+                    responseRow.classList.add('d-none');
+                });
+            });
+            
+            // Handle send response buttons
+            document.querySelectorAll('.send-response').forEach(button => {
+                button.addEventListener('click', function() {
+                    const emailId = this.getAttribute('data-email-id');
+                    const responseRow = document.getElementById(`email-response-${emailId}`);
+                    const responseContent = responseRow.querySelector('.response-content').value;
+                    
+                    // Show loading state
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+                    this.disabled = true;
+                    
+                    fetch('{{ url_for("send_email_response") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email_id: emailId,
+                            response_content: responseContent
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Reset button state
+                        this.innerHTML = 'Send Response';
+                        this.disabled = false;
+                        
+                        if (data.error) {
+                            alert('Error: ' + data.error);
+                            return;
+                        }
+                        
+                        // Hide the response row and show success message
+                        responseRow.classList.add('d-none');
+                        
+                        // Add flash message
+                        const flashContainer = document.querySelector('.flash-messages');
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                        alertDiv.innerHTML = `
+                            Response sent successfully!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        flashContainer.appendChild(alertDiv);
+                        
+                        // Auto-hide the alert after 5 seconds
+                        setTimeout(() => {
+                            const bsAlert = new bootstrap.Alert(alertDiv);
+                            bsAlert.close();
+                        }, 5000);
+                    })
+                    .catch(error => {
+                        // Reset button state
+                        this.innerHTML = 'Send Response';
+                        this.disabled = false;
+                        
+                        console.error('Error:', error);
+                        alert('An error occurred while sending your response.');
+                    });
+                });
+            });
+        });
+        
+        // Handle appointment cancellation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update the cancel buttons to use AJAX
+            document.querySelectorAll('.cancel-appointment-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    const cancellationRow = document.getElementById(`cancellation-row-${appointmentId}`);
+                    
+                    // If the cancellation row is already visible, just hide it
+                    if (!cancellationRow.classList.contains('d-none')) {
+                        cancellationRow.classList.add('d-none');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
+                    this.disabled = true;
+                    
+                    fetch(`{{ url_for('cancel_appointment', appointment_id=0) }}`.replace('0', appointmentId), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Reset button state
+                        this.innerHTML = 'Cancel';
+                        this.disabled = false;
+                        
+                        if (data.error) {
+                            alert('Error: ' + data.error);
+                            return;
+                        }
+                        
+                        // Populate the cancellation row with the email content
+                        cancellationRow.querySelector('.patient-email').textContent = data.email;
+                        cancellationRow.querySelector('.email-content').value = data.cancellation_email;
+                        
+                        // Show the cancellation row
+                        cancellationRow.classList.remove('d-none');
+                    })
+                    .catch(error => {
+                        // Reset button state
+                        this.innerHTML = 'Cancel';
+                        this.disabled = false;
+                        
+                        console.error('Error:', error);
+                        alert('An error occurred while processing your request.');
+                    });
+                });
+            });
+            
+            // Handle cancel cancellation buttons
+            document.querySelectorAll('.cancel-cancellation').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cancellationRow = this.closest('tr');
+                    cancellationRow.classList.add('d-none');
+                });
+            });
+            
+            // Handle reject email buttons
+            document.querySelectorAll('.reject-email').forEach(button => {
+                button.addEventListener('click', function() {
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    const cancellationRow = document.getElementById(`cancellation-row-${appointmentId}`);
+                    
+                    // Show loading state
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Rejecting...';
+                    this.disabled = true;
+                    
+                    submitCancellationDecision(appointmentId, false, () => {
+                        // Reset button state
+                        this.innerHTML = 'Reject Email';
+                        this.disabled = false;
+                        
+                        // Hide the cancellation row
+                        cancellationRow.classList.add('d-none');
+                    });
+                });
+            });
+            
+            // Handle approve email buttons
+            document.querySelectorAll('.approve-email').forEach(button => {
+                button.addEventListener('click', function() {
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    const cancellationRow = document.getElementById(`cancellation-row-${appointmentId}`);
+                    
+                    // Show loading state
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Approving...';
+                    this.disabled = true;
+                    
+                    submitCancellationDecision(appointmentId, true, () => {
+                        // Reset button state
+                        this.innerHTML = 'Approve & Send';
+                        this.disabled = false;
+                        
+                        // Hide the cancellation row
+                        cancellationRow.classList.add('d-none');
+                        
+                        // Update the appointment status in the UI
+                        const appointmentRow = document.getElementById(`appointment-row-${appointmentId}`);
+                        const statusBadge = appointmentRow.querySelector('.badge');
+                        statusBadge.className = 'badge bg-danger';
+                        statusBadge.textContent = 'Cancelled';
+                        
+                        // Remove the cancel button
+                        appointmentRow.querySelector('.cancel-appointment-btn').remove();
+                    });
+                });
+            });
+            
+            // Function to submit cancellation decision
+            function submitCancellationDecision(appointmentId, approved, callback) {
+                fetch('{{ url_for("confirm_cancellation") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        appointment_id: appointmentId,
+                        email_approved: approved ? 'true' : 'false'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                        return;
+                    }
+                    
+                    // Add flash message
+                    const flashContainer = document.querySelector('.flash-messages');
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                    alertDiv.innerHTML = `
+                        ${approved ? 'Appointment cancelled and email sent!' : 'Cancellation rejected.'}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    flashContainer.appendChild(alertDiv);
+                    
+                    // Auto-hide the alert after 5 seconds
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alertDiv);
+                        bsAlert.close();
+                    }, 5000);
+                    
+                    // Execute callback
+                    if (callback) callback();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing your request.');
+                });
+            }
+        });
+        
+        // Mario Theme Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const root = document.documentElement;
+            let marioThemeActive = false;
+            
+            // Define theme colors
+            const defaultTheme = {
+                '--primary-color': '#2c7be5',
+                '--secondary-color': '#6e84a3',
+                '--success-color': '#00d97e',
+                '--danger-color': '#e63757',
+                '--warning-color': '#f6c343',
+                '--info-color': '#39afd1',
+                '--light-color': '#f9fbfd',
+                '--dark-color': '#12263f',
+                '--border-color': '#edf2f9',
+                '--card-shadow': '0 0.75rem 1.5rem rgba(18, 38, 63, 0.03)'
+            };
+            
+            const marioTheme = {
+                '--primary-color': '#e60012', // Mario Red (refined)
+                '--secondary-color': '#4b3621', // Refined brown
+                '--success-color': '#3aa14e', // Refined green (pipe color)
+                '--danger-color': '#ff9c00', // Orange (fire flower)
+                '--warning-color': '#ffd700', // Gold (coin color)
+                '--info-color': '#00a0e9', // Sky blue
+                '--light-color': '#f9f9f9', // Light background
+                '--dark-color': '#1a1a1a', // Dark gray (not pure black)
+                '--border-color': '#4b3621', // Brown border
+                '--card-shadow': '0 0.5rem 1rem rgba(0, 0, 0, 0.15)'
+            };
+            
+            themeToggle.addEventListener('click', function() {
+                marioThemeActive = !marioThemeActive;
+                
+                if (marioThemeActive) {
+                    // Apply Mario theme
+                    Object.entries(marioTheme).forEach(([property, value]) => {
+                        root.style.setProperty(property, value);
+                    });
+                    
+                    // Change button text
+                    themeToggle.innerHTML = '<i class="bi bi-arrow-counterclockwise me-1"></i> Default Theme';
+                    themeToggle.classList.remove('btn-outline-primary');
+                    themeToggle.classList.add('btn-outline-light');
+                    
+                    // Apply Mario-themed styling - more subtle and polished
+                    document.body.style.backgroundColor = '#8ecdf9'; // Softer sky blue
+                    document.body.style.backgroundImage = "url('https://i.imgur.com/NQZAXWD.png')";
+                    document.body.style.backgroundSize = "80px"; // Smaller pattern
+                    document.body.style.backgroundOpacity = "0.5"; // More subtle
+                    
+                    // Add Mario font but keep it readable
+                    const fontLink = document.createElement('link');
+                    fontLink.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+                    fontLink.rel = 'stylesheet';
+                    fontLink.id = 'mario-font';
+                    document.head.appendChild(fontLink);
+                    
+                    // Only use pixel font for headers, keep body text readable
+                    document.querySelectorAll('h1, h2, h3, h4, h5, .card-header, .btn, .navbar-brand').forEach(el => {
+                        el.style.fontFamily = "'Press Start 2P', system-ui, sans-serif";
+                        el.style.letterSpacing = "0.5px"; // Better readability
+                        el.style.fontWeight = "normal"; // Pixel fonts look better without bold
+                    });
+                    
+                    // Change navbar - more polished
+                    const navbar = document.querySelector('.navbar');
+                    navbar.style.background = 'linear-gradient(to bottom, #e60012, #c8000f)'; // Gradient red
+                    navbar.style.color = 'white';
+                    navbar.style.borderBottom = '3px solid #4b3621'; // Thinner border
+                    navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)'; // Subtle shadow
+                    
+                    // Change navbar brand
+                    document.querySelector('.navbar-brand').innerHTML = '<img src="https://i.imgur.com/YTtQzAf.png" height="24" class="me-2"> Mushroom Kingdom Medical';
+                    document.querySelector('.navbar-brand').style.color = 'white';
+                    document.querySelector('.navbar-brand').style.fontSize = '1rem';
+                    document.querySelector('.navbar-brand').style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.3)';
+                    
+                    // Style nav links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.style.color = 'rgba(255, 255, 255, 0.85)';
+                        link.style.fontSize = '0.8rem';
+                        link.style.padding = '0.5rem 0.8rem';
+                    });
+                    
+                    document.querySelector('.nav-link.active').style.color = 'white';
+                    document.querySelector('.nav-link.active').style.textShadow = '0 0 5px rgba(255, 255, 255, 0.5)';
+                    
+                    // Style all cards - more refined
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.style.backgroundColor = 'white'; // Clean white background
+                        card.style.borderLeft = '4px solid var(--primary-color)'; // Keep the left border style
+                        card.style.borderTop = '1px solid #e0e0e0';
+                        card.style.borderRight = '1px solid #e0e0e0';
+                        card.style.borderBottom = '1px solid #e0e0e0';
+                        card.style.borderRadius = '8px';
+                        card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                    });
+                    
+                    // Style card headers - more refined
+                    document.querySelectorAll('.card-header').forEach(header => {
+                        header.style.background = 'linear-gradient(to right, #e60012, #ff3b30)'; // Gradient red
+                        header.style.color = 'white';
+                        header.style.borderBottom = '2px solid #4b3621';
+                        header.style.padding = '0.8rem 1.2rem';
+                        header.style.fontSize = '0.9rem';
+                        header.style.textShadow = '1px 1px 1px rgba(0, 0, 0, 0.2)';
+                    });
+                    
+                    // Add Mario icons to section headers - more subtle
+                    const iconMap = {
+                        '.card-header.email-section h5 i': '<img src="https://i.imgur.com/fSuJRJP.png" height="16" class="me-2">', // Coin for email
+                        '.card-header.appointment-section h5 i': '<img src="https://i.imgur.com/YTtQzAf.png" height="16" class="me-2">', // Mushroom
+                        '.card-header.patient-section h5 i': '<img src="https://i.imgur.com/YTtQzAf.png" height="16" class="me-2">', // Mushroom
+                        '.card-header.clinician-section h5 i': '<img src="https://i.imgur.com/1Up8Mbh.png" height="16" class="me-2">', // Star
+                        '.card-header.waitlist-section h5 i': '<img src="https://i.imgur.com/JqR9nYR.png" height="16" class="me-2">' // Pipe
+                    };
+                    
+                    Object.entries(iconMap).forEach(([selector, html]) => {
+                        const element = document.querySelector(selector);
+                        if (element) element.outerHTML = html;
+                    });
+                    
+                    // Style tables - more refined
+                    document.querySelectorAll('table').forEach(table => {
+                        table.style.borderCollapse = 'separate';
+                        table.style.borderSpacing = '0';
+                        table.style.width = '100%';
+                        table.style.marginBottom = '0';
+                    });
+                    
+                    // Style table headers - more refined
+                    document.querySelectorAll('th').forEach(th => {
+                        th.style.backgroundColor = '#e60012';
+                        th.style.color = 'white';
+                        th.style.fontFamily = "'Press Start 2P', system-ui, sans-serif";
+                        th.style.fontSize = '0.7rem';
+                        th.style.padding = '0.75rem 1rem';
+                        th.style.borderBottom = '2px solid #4b3621';
+                        th.style.textAlign = 'left';
+                        th.style.textShadow = '1px 1px 1px rgba(0, 0, 0, 0.2)';
+                    });
+                    
+                    // Style table cells - more refined
+                    document.querySelectorAll('td').forEach(td => {
+                        td.style.padding = '0.75rem 1rem';
+                        td.style.borderBottom = '1px solid #e0e0e0';
+                        td.style.fontSize = '0.85rem';
+                    });
+                    
+                    // Add hover effect to table rows
+                    document.querySelectorAll('tbody tr').forEach(tr => {
+                        tr.addEventListener('mouseover', function() {
+                            this.style.backgroundColor = 'rgba(255, 215, 0, 0.1)'; // Subtle gold highlight
+                        });
+                        tr.addEventListener('mouseout', function() {
+                            this.style.backgroundColor = '';
+                        });
+                    });
+                    
+                    // Style buttons - more refined
+                    document.querySelectorAll('.btn-primary').forEach(btn => {
+                        btn.style.background = 'linear-gradient(to bottom, #e60012, #c8000f)';
+                        btn.style.borderColor = '#4b3621';
+                        btn.style.color = 'white';
+                        btn.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+                        btn.style.borderRadius = '4px';
+                        btn.style.fontSize = '0.75rem';
+                        btn.style.padding = '0.4rem 0.8rem';
+                        btn.style.textShadow = '1px 1px 1px rgba(0, 0, 0, 0.2)';
+                        
+                        // Add hover effect
+                        btn.addEventListener('mouseover', function() {
+                            this.style.background = 'linear-gradient(to bottom, #ff1a2d, #e60012)';
+                            this.style.transform = 'translateY(-1px)';
+                        });
+                        btn.addEventListener('mouseout', function() {
+                            this.style.background = 'linear-gradient(to bottom, #e60012, #c8000f)';
+                            this.style.transform = 'translateY(0)';
+                        });
+                    });
+                    
+                    // Style stats cards - more refined
+                    document.querySelectorAll('.stats-card').forEach(card => {
+                        const count = card.querySelector('h2').textContent;
+                        const label = card.querySelector('p').textContent;
+                        
+                        let icon = 'https://i.imgur.com/YTtQzAf.png'; // Mushroom default
+                        let color = '#e60012'; // Default red
+                        
+                        if (label.includes('Clinician')) {
+                            icon = 'https://i.imgur.com/1Up8Mbh.png'; // Star
+                            color = '#ffd700'; // Gold
+                        } else if (label.includes('Appointment')) {
+                            icon = 'https://i.imgur.com/fSuJRJP.png'; // Coin
+                            color = '#ff9c00'; // Orange
+                        } else if (label.includes('Waitlist')) {
+                            icon = 'https://i.imgur.com/JqR9nYR.png'; // Pipe
+                            color = '#3aa14e'; // Green
+                        }
+                        
+                        card.innerHTML = `
+                            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
+                                <img src="${icon}" height="24" class="me-2">
+                                <span style="font-family: 'Press Start 2P', system-ui, sans-serif; font-size: 1.8rem; color: ${color};">${count}</span>
+                            </div>
+                            <p style="margin: 0; text-align: center; font-size: 0.9rem; color: #4b3621;">${label}</p>
+                        `;
+                    });
+                    
+                    // Style badges - more refined
+                    document.querySelectorAll('.badge').forEach(badge => {
+                        const text = badge.textContent.trim();
+                        
+                        if (text === 'Scheduled') {
+                            badge.style.backgroundColor = '#3aa14e';
+                        } else if (text === 'Cancelled') {
+                            badge.style.backgroundColor = '#e60012';
+                        } else if (text === 'Completed') {
+                            badge.style.backgroundColor = '#00a0e9';
+                        } else if (text.includes('unread')) {
+                            badge.style.backgroundColor = '#e60012';
+                        }
+                        
+                        badge.style.color = 'white';
+                        badge.style.fontFamily = "'Press Start 2P', system-ui, sans-serif";
+                        badge.style.fontSize = '0.6rem';
+                        badge.style.padding = '0.35em 0.65em';
+                        badge.style.borderRadius = '4px';
+                        badge.style.textShadow = '1px 1px 1px rgba(0, 0, 0, 0.2)';
+                    });
+                    
+                    // Add a subtle Mario background music
+                    const bgMusic = document.createElement('audio');
+                    bgMusic.src = 'https://vgmsite.com/soundtracks/super-mario-bros/jscfysqv/01%20-%20Ground%20Theme.mp3';
+                    bgMusic.volume = 0.1;
+                    bgMusic.loop = true;
+                    bgMusic.id = 'mario-music';
+                    document.body.appendChild(bgMusic);
+                    
+                    // Try to play music (will be blocked by most browsers without user interaction)
+                    bgMusic.play().catch(e => console.log('Auto-play prevented by browser policy'));
+                    
+                } else {
+                    // Restore default theme
+                    Object.entries(defaultTheme).forEach(([property, value]) => {
+                        root.style.setProperty(property, value);
+                    });
+                    
+                    // Change button text back
+                    themeToggle.innerHTML = '<i class="bi bi-nintendo-switch me-1"></i> Mario Theme';
+                    themeToggle.classList.remove('btn-outline-light');
+                    themeToggle.classList.add('btn-outline-primary');
+                    
+                    // Remove Mario-themed styling
+                    document.body.style.backgroundColor = '';
+                    document.body.style.backgroundImage = "none";
+                    document.body.style.fontFamily = "'Poppins', sans-serif";
+                    
+                    // Restore navbar
+                    const navbar = document.querySelector('.navbar');
+                    navbar.style.background = '';
+                    navbar.style.color = '';
+                    navbar.style.borderBottom = '';
+                    navbar.style.boxShadow = '';
+                    
+                    // Restore navbar brand
+                    document.querySelector('.navbar-brand').innerHTML = '<i class="bi bi-hospital me-2"></i> Medical Appointment System';
+                    document.querySelector('.navbar-brand').style.color = '';
+                    document.querySelector('.navbar-brand').style.fontSize = '';
+                    document.querySelector('.navbar-brand').style.textShadow = '';
+                    
+                    // Restore nav links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.style.color = '';
+                        link.style.fontSize = '';
+                        link.style.padding = '';
+                    });
+                    
+                    document.querySelector('.nav-link.active').style.color = '';
+                    document.querySelector('.nav-link.active').style.textShadow = '';
+                    
+                    // Restore cards
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.style.backgroundColor = '';
+                        card.style.borderLeft = '';
+                        card.style.borderTop = '';
+                        card.style.borderRight = '';
+                        card.style.borderBottom = '';
+                        card.style.borderRadius = '';
+                        card.style.boxShadow = '';
+                    });
+                    
+                    // Restore card headers
+                    document.querySelectorAll('.card-header').forEach(header => {
+                        header.style.background = '';
+                        header.style.color = '';
+                        header.style.borderBottom = '';
+                        header.style.padding = '';
+                        header.style.fontSize = '';
+                        header.style.textShadow = '';
+                    });
+                    
+                    // Restore original icons
+                    document.querySelector('.card-header.email-section h5 i').className = 'bi bi-envelope me-2';
+                    document.querySelector('.card-header.appointment-section h5 i').className = 'bi bi-calendar-check me-2';
+                    document.querySelector('.card-header.patient-section h5 i').className = 'bi bi-people me-2';
+                    document.querySelector('.card-header.clinician-section h5 i').className = 'bi bi-person-badge me-2';
+                    document.querySelector('.card-header.waitlist-section h5 i').className = 'bi bi-hourglass-split me-2';
+                    
+                    // Restore tables
+                    document.querySelectorAll('table').forEach(table => {
+                        table.style.borderCollapse = '';
+                        table.style.borderSpacing = '';
+                        table.style.width = '';
+                        table.style.marginBottom = '';
+                    });
+                    
+                    // Restore table headers
+                    document.querySelectorAll('th').forEach(th => {
+                        th.style.backgroundColor = '';
+                        th.style.color = '';
+                        th.style.fontFamily = '';
+                        th.style.fontSize = '';
+                        th.style.padding = '';
+                        th.style.borderBottom = '';
+                        th.style.textAlign = '';
+                        th.style.textShadow = '';
+                    });
+                    
+                    // Restore table cells
+                    document.querySelectorAll('td').forEach(td => {
+                        td.style.padding = '';
+                        td.style.borderBottom = '';
+                        td.style.fontSize = '';
+                    });
+                    
+                    // Remove hover effect from table rows
+                    document.querySelectorAll('tbody tr').forEach(tr => {
+                        tr.removeEventListener('mouseover', function() {});
+                        tr.removeEventListener('mouseout', function() {});
+                    });
+                    
+                    // Restore buttons
+                    document.querySelectorAll('.btn-primary').forEach(btn => {
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                        btn.style.boxShadow = '';
+                        btn.style.borderRadius = '';
+                        btn.style.fontSize = '';
+                        btn.style.padding = '';
+                        btn.style.textShadow = '';
+                        
+                        // Remove hover effect
+                        btn.removeEventListener('mouseover', function() {});
+                        btn.removeEventListener('mouseout', function() {});
+                    });
+                    
+                    // Restore font for all elements
+                    document.querySelectorAll('h1, h2, h3, h4, h5, .card-header, .btn, .navbar-brand').forEach(el => {
+                        el.style.fontFamily = '';
+                        el.style.letterSpacing = '';
+                        el.style.fontWeight = '';
+                    });
+                    
+                    // Remove Mario font
+                    const marioFont = document.getElementById('mario-font');
+                    if (marioFont) marioFont.remove();
+                    
+                    // Stop and remove background music
+                    const bgMusic = document.getElementById('mario-music');
+                    if (bgMusic) {
+                        bgMusic.pause();
+                        bgMusic.remove();
+                    }
+                    
+                    // Restore stats cards and badges
+                    location.reload(); // Simplest way to restore everything to original state
+                }
+                
+                // Play sound effect
+                const sound = new Audio(marioThemeActive ? 
+                    'https://www.myinstants.com/media/sounds/smb_powerup.mp3' : 
+                    'https://www.myinstants.com/media/sounds/smb_pipe.mp3');
+                sound.play().catch(e => console.log('Sound play prevented by browser policy'));
+            });
+        });
+    </script>
+</body>
+</html>
