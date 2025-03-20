@@ -18,8 +18,8 @@ AI Medical System automates the tedious aspects of medical appointment managemen
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/secretari.git
-   cd secretari
+   git clone https://github.com/issamlaradji/ai_medical_system.git
+   cd ai_medical_system
    ```
 
 2. Install dependencies:
