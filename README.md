@@ -12,6 +12,7 @@ AI Medical System automates the tedious aspects of medical appointment managemen
 
 - Python 3.8+
 - pip (Python package manager)
+- Together AI API key (for AI-powered features)
 
 ### Installation
 
@@ -25,6 +26,16 @@ AI Medical System automates the tedious aspects of medical appointment managemen
    ```
    pip install flask datetime enum dataclasses typing
    ```
+
+3. Set up your Together AI API key:
+   - Create a file named `api_keys.json` in the root directory
+   - Add your API key in the following format:
+     ```
+     {"together":"your_api_key_here"}
+     ```
+   - You can obtain an API key by:
+     - Asking Issam for access, or
+     - Creating an account at [together.ai](https://together.ai) and generating a key
 
 ### Running the Application
 
